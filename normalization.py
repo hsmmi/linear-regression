@@ -27,7 +27,7 @@ def range_min_to_max(mat, newMin, newMax):
 def clipping(mat, newMin, newMax):
     """
     Clipping to a range:
-    Get a matrix(or vector) and return matrix(or vector) that set velues more than 
+    Get a matrix(or vector) and return matrix(or vector) that set values more than 
     newMax to newMax and values less than newMin to newMin
     It's good when:
     .   When the feature contains some extreme outliers.
@@ -38,7 +38,7 @@ def log_scaling(mat):
     """
     Log Scaling:
     Get a matrix(or vector) and return ) that each element is
-    log of that element in input matrix(or vector
+    the log of that element in input matrix(or vector
     It's good when:
     .   When the feature contains some extreme outliers.
     """

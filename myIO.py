@@ -48,26 +48,6 @@ def read_dataset_with_pandas(file, atr= None):
 
     return colName, data
 
-def read_dataset_to_X_and_y(file, atr= None):
-    """
-    Read the attribute(atr) that you want and put thoes attribute of all samples
-    and X0 = 1 in X and all samples lable in y 
-    Return X and y as nparray
-    """
-    import numpy as np
-    colName, sample = read_dataset_with_pandas(file,atr)
-    sample = sample.to_numpy()
-    if(atr == None):
-        sample = np.array(list(map(lambda x:np.concatenate(([1], x[:-1])),sample)))
-    else:
-        sample = np.array(list(map(lambda x:np.concatenate(([1], x)),sample)))
-
-    colName, lable = read_dataset_with_pandas(file,-1)
-    lable = lable.to_numpy()
-    lable = np.array(list(map(lambda x:x[0],lable)))
-
-    return sample, lable
-
 def dataframe_to_docx_table(header,data,file,doc=None,save=1):
     """
     Read header and data and return doc include header and data

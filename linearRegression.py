@@ -1,25 +1,19 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from myIO import read_dataset_to_X_and_y
+from preprocessing import read_dataset_to_X_and_y
 
 def closed_form(XInput,yInput):
     return np.linalg.inv(XInput.transpose()@XInput)@XInput.transpose()@yInput
 
-def linear_regression(fileTrain, fileTest, method, atr = None, normalization = None, minNormalization = None, maxNormalization = None, ploter=0, printer = 0):
+def linear_regression(XTrain, yTrain, method, printer = 0):
     """
-    It gets two dataset of train and test data and method.
+    It gets matrix samples(XTrain) and their labels(yTrain) and method.
     method:
     .   can be "closed_form" or "gradient_descent"
-    normalization:
-    .   by default is None and can be "Z-score", "scaling", "clipping"
-        or log_scaling
-    .   for "scaling", "clipping" must set minNormalization and
-        maxNormalization
     Return learned parameters (θ0 , θ1 , ..., θn ) and the value of MSE 
     error on the train and test data.
     """
-    XTrain,yTrain = read_dataset_to_X_and_y(fileTrain)
     if(printer):
         print(f'matrix XTrain is\n{XTrain}\n')
     if(printer):
@@ -46,14 +40,15 @@ def linear_regression(fileTrain, fileTest, method, atr = None, normalization = N
     MSETrain = (np.square(errorTrain)).mean(axis=0)
     if(printer):
         print(f'MSE on train data is\n{MSETrain}\n')
+    
+    return teta, MSETrain
 
-    XTest,yTest = read_dataset_to_X_and_y(fileTest)
+def linear_regression_evaluation(XTest, yTest, teta, printer = 0, ploter=0):
     if(printer):
         print(f'matrix XTest is\n{XTest}\n')
     if(printer):
         print(f'vector yTest is\n{yTest}\n')
 
-    # exit()
     predictionTest = XTest @ teta
     if(printer):
         print(f'vector predictionTest is\n{predictionTest}\n')
@@ -66,7 +61,6 @@ def linear_regression(fileTrain, fileTest, method, atr = None, normalization = N
     if(printer):
         print(f'MSE on test data is\n{MSETest}\n')
 
-
     if(ploter):
         sXTest = XTest.argmin(axis=0)[1]
         eXTest = XTest.argmax(axis=0)[1]
@@ -75,11 +69,20 @@ def linear_regression(fileTrain, fileTest, method, atr = None, normalization = N
         plt.xlabel('Feature')
         plt.ylabel('Lable')
         plt.show()
-    
-    return teta, MSETrain, MSETest
 
-teta, MSETrain, MSETest = linear_regression('dataset/Data-Train.csv','dataset/Data-Test.csv', method='closed_form')
+    return MSETest
+
+normalizationMethod = [None ,"z_score", "scaling", "clipping", "log_scaling"]
+i = 1
+
+XTrain, tTrain = read_dataset_to_X_and_y('dataset/Data-Train-mini.csv',normalization=normalizationMethod[i])
+
+teta, MSETrain = linear_regression(XTrain, tTrain , method='closed_form', printer=1)
+
+XTest, tTest = read_dataset_to_X_and_y('dataset/Data-Test-mini.csv',normalization=normalizationMethod[i])
+
+MSETest = linear_regression_evaluation(XTest, tTest, teta, printer=1)
+
 print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{teta}\n')
 print(f'MSE on train data is\n{MSETrain}\n')
 print(f'MSE on test data is\n{MSETest}\n')
-

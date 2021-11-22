@@ -1,19 +1,47 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+from preprocessing import read_dataset_to_X_and_y
+
 def closed_form(XInput,yInput):
     """
-    It gets matrix samples(XInput) any vector lables(yInput)
+    It gets matrix samples(XInput) and vector lables(yInput)
     Compute learning parameters with (((X)tX)^-1)(X)ty
     Return learned parameters
     """
-    return np.linalg.inv(XInput.transpose()@XInput)@XInput.transpose()@yInput
+    return np.linalg.inv(XInput.T@XInput)@XInput.T@yInput
 
-def linear_regression(XTrain, yTrain, method, printer = 0):
+def gradient_descent(XInput ,yInput, alpha):
+    """
+    It gets matrix samples(XInput) and vector lables(yInput)
+    Compute learning parameters with updating all theta(i)
+    in each iteration and stop if #iteration exit the 
+    threshold or theta converge
+    Return learned parameters
+    """
+
+    thetaNew = np.zeros((len(XInput[0]),1))
+    theta = np.ones_like(thetaNew)
+    SSDT = 1
+    maxIteration = len(XInput)*10
+    iteration = 0
+    eps = 1e-9
+    # while (iteration < maxIteration and SSDT > eps):
+    while (SSDT > eps):
+        thetaNew = theta - alpha * (XInput.T @ ((XInput @ theta) - yInput))
+        
+        SSDT = np.linalg.norm(thetaNew - theta)
+        theta = thetaNew
+        iteration += 1
+    print(iteration)
+    return theta
+
+def linear_regression(XTrain, yTrain, alpha = None, printer = 0):
     """
     It gets matrix samples train(XTrain) and their labels(yTrain) and method.
-    method:
-    .   can be "closed_form" or "gradient_descent"
+    alpha:
+    .   If alpha be None it will use closed_form if not it use gradient_descent
+        with your alpha
     Return learned parameters (θ0 , θ1 , ..., θn ) and the value of MSE 
     error on the train data.
     """
@@ -22,17 +50,15 @@ def linear_regression(XTrain, yTrain, method, printer = 0):
     if(printer):
         print(f'vector yTrain is\n{yTrain}\n')
 
-    if(method == 'closed_form'):
-        teta = closed_form(XTrain,yTrain)
-    elif(method == 'gradient_descent'):
-        teta = closed_form(XTrain,yTrain)
+    if(alpha == None):
+        theta = closed_form(XTrain,yTrain)
     else:
-        print('method should be "closed_form" or "gradient_descent"')
-        return    
-    if(printer):
-        print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{teta}\n')
+        theta = gradient_descent(XTrain,yTrain,alpha)
 
-    predictionTrain = XTrain @ teta
+    if(printer):
+        print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')
+
+    predictionTrain = XTrain @ theta
     if(printer):
         print(f'vector predictionTrain is\n{predictionTrain}\n')
 
@@ -44,12 +70,12 @@ def linear_regression(XTrain, yTrain, method, printer = 0):
     if(printer):
         print(f'MSE on train data is\n{MSETrain}\n')
     
-    return teta, MSETrain
+    return theta, MSETrain
 
-def linear_regression_evaluation(XTest, yTest, teta, printer = 0, plotter=0):
+def linear_regression_evaluation(XTest, yTest, theta, printer = 0, plotter=0):
     """
     It gets matrix samples test(XTest) and their labels(yTest) and learned
-    parameters(teta) and plotter(by default 0).
+    parameters(theta) and plotter(by default 0).
     If plotter be 1 then it'll plot the test sample and a regression line
     Return the value of MSE error on the test data.
     """
@@ -58,7 +84,7 @@ def linear_regression_evaluation(XTest, yTest, teta, printer = 0, plotter=0):
     if(printer):
         print(f'vector yTest is\n{yTest}\n')
 
-    predictionTest = XTest @ teta
+    predictionTest = XTest @ theta
     if(printer):
         print(f'vector predictionTest is\n{predictionTest}\n')
 

@@ -31,11 +31,10 @@ def read_dataset_to_X_and_y(file, atr= None, normalization = None, minValue = No
 
     if(atr == None):
         samples = np.array(list(map(lambda x:np.concatenate(([1], x[:-1])),data)))
-        lable = np.array(list(map(lambda x:x[-1],data)))
+        lable = np.array(list(map(lambda x:[x[-1]],data)))
     else:
         if(atr[1] == len(colName)):
             atr[1] -= 1
         samples = np.array(list(map(lambda x:np.concatenate(([1], x)),data)))
-        lable = np.array(list(map(lambda x:x[-1],data)))
-    
+        lable = np.array(list(map(lambda x:[x[-1]],data)))
     return samples, lable

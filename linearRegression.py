@@ -1,5 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from numpy.random.mtrand import randint
 
 def closed_form(XInput,yInput):
     """
@@ -18,43 +19,46 @@ def gradient_descent(XInput ,yInput, alpha, printer, ploter):
     Return learned parameters
     """
 
+    scale = (yInput.mean())**2
+
     def MSE(XInput ,yInput, theta):
         return ((XInput @ theta - yInput).T@(XInput @ theta - yInput))[0][0] / len(XInput)
 
     def updateTheta(XInput ,yInput, theta, alpha):
-        return theta - alpha * (XInput.T @ ((XInput @ theta) - yInput))
+        return theta - (alpha/len(XInput)/scale) * (XInput.T @ ((XInput @ theta) - yInput))
     
     def step_decay(epoch,epochs_drop):
         """
-        It half the learning rate every epochs_drop epochs
+        It 4/5 the learning rate every epochs_drop epochs
         """
-        drop = 0.5
+        drop = 4/5
         newAlpha = alpha * drop**((1+epoch)//epochs_drop)
         return newAlpha
 
-    theta = np.random.rand(len(XInput[0]),1)
+    theta = np.zeros((len(XInput[0]),1))
+
     maxEpoch = int(1e5)
-    J = []
+    MSELog = [MSE(XInput ,yInput, theta)]
     epoch = 0
-    eps = 1e-3
-    alpha /= len(XInput)
+    eps = scale * 1e-7
 
     for i in range(1,maxEpoch):
-        theta = updateTheta(XInput ,yInput, theta, step_decay(i,20))
+        theta = updateTheta(XInput ,yInput, theta, step_decay(i,5))
         epoch += 1
-        J.append(MSE(XInput ,yInput, theta))
-        if(i > 1 and abs(J[-2]-J[-1]) < eps):
+        MSELog.append(MSE(XInput ,yInput, theta))
+        if(i > 1 and abs(MSELog[-2]-MSELog[-1]) < eps):
             break
     
     if(printer):
-        print(f'MSE in each epochs are \n{J}')
+        print(f'MSE in each epochs are \n{MSELog}')
         print(f'After {epoch} epochs')
   
     if(ploter):
-        plt.plot(range(1,len(J)+1), J, ".--", label="cost function")
+        plt.plot(range(0,len(MSELog)), MSELog, ".--", label="cost function")
         plt.legend(loc="upper right")
         plt.xlabel('Iteratioin')
-        plt.ylabel('J(θ)')
+        plt.ylabel('MSE')
+        plt.title(f'Learning rate {alpha} and final MSE {round(MSELog[-1],3)}')
         plt.show()
     
     return theta

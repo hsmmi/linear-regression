@@ -11,8 +11,7 @@ for i in range(len(normalizationMethod)):
 
     XTrain, yTrain = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
 
-    # theta, MSETrain = linear_regression(XTrain, yTrain)
-    theta, MSETrain = linear_regression(XTrain, yTrain, alpha= 0.0000001)
+    theta, MSETrain = linear_regression(XTrain, yTrain, alpha= 0.0001, ploter = 1)
    
     XTest, tTest = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
 

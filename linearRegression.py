@@ -1,42 +1,65 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from preprocessing import read_dataset_to_X_and_y
-
 def closed_form(XInput,yInput):
     """
-    It gets matrix samples(XInput) and vector lables(yInput)
+    It gets matrix samples(XInput) and vector labels(yInput)
     Compute learning parameters with (((X)tX)^-1)(X)ty
     Return learned parameters
     """
     return np.linalg.inv(XInput.T@XInput)@XInput.T@yInput
 
-def gradient_descent(XInput ,yInput, alpha):
+def gradient_descent(XInput ,yInput, alpha, printer, ploter):
     """
-    It gets matrix samples(XInput) and vector lables(yInput)
+    It gets matrix samples(XInput) and vector labels(yInput)
     Compute learning parameters with updating all theta(i)
-    in each iteration and stop if #iteration exit the 
-    threshold or theta converge
+    in each epochs and stop if #epochs exit the 
+    threshold or cost function improvment < eps
     Return learned parameters
     """
 
-    thetaNew = np.zeros((len(XInput[0]),1))
-    theta = np.ones_like(thetaNew)
-    SSDT = 1
-    maxIteration = len(XInput)*10
-    iteration = 0
-    eps = 1e-9
-    # while (iteration < maxIteration and SSDT > eps):
-    while (SSDT > eps):
-        thetaNew = theta - alpha * (XInput.T @ ((XInput @ theta) - yInput))
-        
-        SSDT = np.linalg.norm(thetaNew - theta)
-        theta = thetaNew
-        iteration += 1
-    print(iteration)
+    def MSE(XInput ,yInput, theta):
+        return ((XInput @ theta - yInput).T@(XInput @ theta - yInput))[0][0] / len(XInput)
+
+    def updateTheta(XInput ,yInput, theta, alpha):
+        return theta - alpha * (XInput.T @ ((XInput @ theta) - yInput))
+    
+    def step_decay(epoch,epochs_drop):
+        """
+        It half the learning rate every epochs_drop epochs
+        """
+        drop = 0.5
+        newAlpha = alpha * drop**((1+epoch)//epochs_drop)
+        return newAlpha
+
+    theta = np.random.rand(len(XInput[0]),1)
+    maxEpoch = int(1e5)
+    J = []
+    epoch = 0
+    eps = 1e-3
+    alpha /= len(XInput)
+
+    for i in range(1,maxEpoch):
+        theta = updateTheta(XInput ,yInput, theta, step_decay(i,20))
+        epoch += 1
+        J.append(MSE(XInput ,yInput, theta))
+        if(i > 1 and abs(J[-2]-J[-1]) < eps):
+            break
+    
+    if(printer):
+        print(f'MSE in each epochs are \n{J}')
+        print(f'After {epoch} epochs')
+  
+    if(ploter):
+        plt.plot(range(1,len(J)+1), J, ".--", label="cost function")
+        plt.legend(loc="upper right")
+        plt.xlabel('Iteratioin')
+        plt.ylabel('J(θ)')
+        plt.show()
+    
     return theta
 
-def linear_regression(XTrain, yTrain, alpha = None, printer = 0):
+def linear_regression(XTrain, yTrain, alpha = None, printer = 0, ploter = 1):
     """
     It gets matrix samples train(XTrain) and their labels(yTrain) and method.
     alpha:
@@ -53,7 +76,7 @@ def linear_regression(XTrain, yTrain, alpha = None, printer = 0):
     if(alpha == None):
         theta = closed_form(XTrain,yTrain)
     else:
-        theta = gradient_descent(XTrain,yTrain,alpha)
+        theta = gradient_descent(XTrain,yTrain,alpha,printer,ploter)
 
     if(printer):
         print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')
@@ -102,7 +125,7 @@ def linear_regression_evaluation(XTest, yTest, theta, printer = 0, plotter=0):
 
         plt.plot(list(zip(*XTest))[1], yTest, ".", label="samples")
         plt.plot([XTest[sXTest][1],XTest[eXTest][1]], [predictionTest[sXTest],predictionTest[eXTest]], "-r", label="regression line")
-        plt.legend(loc="upper left")
+        plt.legend(loc="upper right")
         plt.xlabel('Feature')
         plt.ylabel('Lable')
         plt.show()

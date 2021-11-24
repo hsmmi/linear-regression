@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from numpy.random.mtrand import randint
 
-def closedForm(XInput,yInput):
+def closed_form(XInput,yInput):
     """
     It gets matrix samples(XInput) and vector labels(yInput)
     Compute learning parameters with (((X)tX)^-1)(X)ty
@@ -10,7 +10,7 @@ def closedForm(XInput,yInput):
     """
     return np.linalg.inv(XInput.T@XInput)@XInput.T@yInput
 
-def gradientDescent(XInput ,yInput, alpha, printer, ploter):
+def gradient_descent(XInput ,yInput, alpha, printer, ploter):
     """
     It gets matrix samples(XInput) and vector labels(yInput)
     Compute learning parameters with updating all theta(i)
@@ -19,7 +19,8 @@ def gradientDescent(XInput ,yInput, alpha, printer, ploter):
     Return learned parameters
     """
 
-    scale = (yInput.mean())**2 + 1
+    scale = ((XInput[:][1]).mean())**2 + 1
+    print(scale)
 
     def MSE(XInput ,yInput, theta):
         return ((XInput @ theta - yInput).T@(XInput @ theta - yInput))[0][0] / len(XInput)
@@ -27,7 +28,7 @@ def gradientDescent(XInput ,yInput, alpha, printer, ploter):
     def updateTheta(XInput ,yInput, theta, alpha):
         return theta - (alpha/len(XInput)/scale) * (XInput.T @ ((XInput @ theta) - yInput))
     
-    def stepDecay(epoch,epochs_drop):
+    def step_decay(epoch,epochs_drop):
         """
         It 4/5 the learning rate every epochs_drop epochs
         """
@@ -40,10 +41,10 @@ def gradientDescent(XInput ,yInput, alpha, printer, ploter):
     maxEpoch = int(1e5)
     MSELog = [MSE(XInput ,yInput, theta)]
     epoch = 0
-    eps = scale * 1e-7
+    eps = 1e-7
 
     for i in range(1,maxEpoch):
-        theta = updateTheta(XInput ,yInput, theta, stepDecay(i,5))
+        theta = updateTheta(XInput ,yInput, theta, step_decay(i,5))
         epoch += 1
         MSELog.append(MSE(XInput ,yInput, theta))
         if(i > 1 and abs(MSELog[-2]-MSELog[-1]) < eps):
@@ -58,16 +59,16 @@ def gradientDescent(XInput ,yInput, alpha, printer, ploter):
         plt.legend(loc="upper right")
         plt.xlabel('Iteratioin')
         plt.ylabel('MSE')
-        plt.title(f'Learning rate {alpha} and final MSE {round(MSELog[-1],6-int(np.log10(scale)))}')
+        plt.title(f'Learning rate {alpha} and final MSE {round(MSELog[-1],3)}')
         plt.show()
     
     return theta
 
-def linearRegression(XTrain, yTrain, alpha = None, printer = 0, ploter = 0):
+def linear_regression(XTrain, yTrain, alpha = None, printer = 0, ploter = 0):
     """
     It gets matrix samples train(XTrain) and their labels(yTrain) and method.
     alpha:
-    .   If alpha be None it will use closedForm if not it use gradientDescent
+    .   If alpha be None it will use closed_form if not it use gradient_descent
         with your alpha
     Return learned parameters (θ0 , θ1 , ..., θn ) and the value of MSE 
     error on the train data.
@@ -78,9 +79,9 @@ def linearRegression(XTrain, yTrain, alpha = None, printer = 0, ploter = 0):
         print(f'vector yTrain is\n{yTrain}\n')
 
     if(alpha == None):
-        theta = closedForm(XTrain,yTrain)
+        theta = closed_form(XTrain,yTrain)
     else:
-        theta = gradientDescent(XTrain,yTrain,alpha,printer,ploter)
+        theta = gradient_descent(XTrain,yTrain,alpha,printer,ploter)
 
     if(printer):
         print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')
@@ -99,7 +100,7 @@ def linearRegression(XTrain, yTrain, alpha = None, printer = 0, ploter = 0):
     
     return theta, MSETrain
 
-def linearRegressionEvaluation(XTest, yTest, theta, printer = 0, plotter=0):
+def linear_regression_evaluation(XTest, yTest, theta, printer = 0, plotter=0):
     """
     It gets matrix samples test(XTest) and their labels(yTest) and learned
     parameters(theta) and plotter(by default 0).

@@ -1,6 +1,6 @@
 import numpy as np
 
-def zScore(mat):
+def zero_mean_unit_variance(mat):
     """
     Z-score normalization:
     Get a matrix(or vector) and return zero-mean unit-variance matrix(or vector)
@@ -11,7 +11,7 @@ def zScore(mat):
     with np.errstate(divide='ignore', invalid='ignore'):
         return (mat - mat.mean(axis=0)) / mat.std(axis=0)
 
-def rangeMinToMax(mat, newMin, newMax):
+def range_min_to_max(mat, newMin, newMax):
     """
     Scaling to a range:
     Get a matrix(or vector) and return matrix(or vector) that scale all value
@@ -34,7 +34,7 @@ def clipping(mat, newMin, newMax):
     """
     return np.clip(mat,newMin,newMax)
 
-def logScaling(mat):
+def log_scaling(mat):
     """
     Log Scaling:
     Get a matrix(or vector) and return ) that each element is

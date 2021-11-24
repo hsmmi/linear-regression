@@ -1,5 +1,5 @@
-from linearRegression import linearRegression, linearRegressionEvaluation
-from preprocessing import readDatasetToXAndY
+from linearRegression import linear_regression, linear_regression_evaluation
+from preprocessing import read_dataset_to_X_and_y
 
 
 normalizationMethod = [None ,"z_score"]
@@ -10,15 +10,15 @@ for i in range(len(normalizationMethod)):
     print(f'Normalization method is {normalizationMethod[i]}\n')
     print(f'Linear regression with gradient decent alpha = 1\n')
 
-    XTrain, yTrain = readDatasetToXAndY('dataset/Data-Train.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
+    XTrain, yTrain = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
     
-    # theta, MSETrain = linearRegression(XTrain, yTrain, alpha= 1)
-    theta, MSETrain = linearRegression(XTrain, yTrain, alpha= 1, ploter = 1)
+    # theta, MSETrain = linear_regression(XTrain, yTrain, alpha= 1)
+    theta, MSETrain = linear_regression(XTrain, yTrain, alpha= 0.5, ploter = 1)
    
-    XTest, tTest = readDatasetToXAndY('dataset/Data-Test.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
+    XTest, tTest = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
 
-    # MSETest = linearRegressionEvaluation(XTest, tTest, theta)
-    MSETest = linearRegressionEvaluation(XTest, tTest, theta, plotter = 1)
+    # MSETest = linear_regression_evaluation(XTest, tTest, theta)
+    MSETest = linear_regression_evaluation(XTest, tTest, theta, plotter = 1)
 
     print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')
     print(f'MSE on train data is\n{MSETrain}\n')
@@ -30,14 +30,14 @@ for i in range(len(normalizationMethod)):
     print(f'Normalization method is {normalizationMethod[i]}\n')
     print(f'Linear regression with closed-form\n')
 
-    XTrain, yTrain = readDatasetToXAndY('dataset/Data-Train.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
+    XTrain, yTrain = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
     
-    theta, MSETrain = linearRegression(XTrain, yTrain)
+    theta, MSETrain = linear_regression(XTrain, yTrain)
    
-    XTest, tTest = readDatasetToXAndY('dataset/Data-Test.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
+    XTest, tTest = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
 
-    # MSETest = linearRegressionEvaluation(XTest, tTest, theta)
-    MSETest = linearRegressionEvaluation(XTest, tTest, theta, plotter = 1)
+    # MSETest = linear_regression_evaluation(XTest, tTest, theta)
+    MSETest = linear_regression_evaluation(XTest, tTest, theta, plotter = 1)
 
     print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')
     print(f'MSE on train data is\n{MSETrain}\n')

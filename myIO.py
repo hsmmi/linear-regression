@@ -37,7 +37,7 @@ def readDataset(file, atr):
         with open(os.path.join(os.path.dirname(__file__),file),'r') as f:
             return list(map(lambda x: [float(i) for i in (x.split(',')[atr[0]:atr[1]])], f.read().splitlines()))
 
-def read_dataset_with_pandas(file, atr= None):
+def readDatasetWithPandas(file, atr= None):
     import pandas as pd
     colName = pd.read_csv(os.path.join(os.path.dirname(__file__),file),nrows=0).columns
     if (type(atr) == int):
@@ -48,7 +48,7 @@ def read_dataset_with_pandas(file, atr= None):
 
     return colName, data
 
-def dataframe_to_docx_table(header,data,file,doc=None,save=1):
+def dataframeToDocxTable(header,data,file,doc=None,save=1):
     """
     Read header and data and return doc include header and data
     If you gave if doc it add header and data to it and return it
@@ -73,7 +73,7 @@ def dataframe_to_docx_table(header,data,file,doc=None,save=1):
         doc.save(file)
     return doc
 
-def string_to_dataframe(string):
+def stringToDataframe(string):
     from io import StringIO
     import pandas as pd
     data = StringIO(string)

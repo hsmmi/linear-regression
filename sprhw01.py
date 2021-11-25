@@ -1,46 +1,45 @@
 from linearRegression import linear_regression, linear_regression_evaluation
 from preprocessing import read_dataset_to_X_and_y
 
+normalization_method = [None ,"z_score"]
+# normalization_method = [None]
+min_value, max_value = 0, 1
 
-normalizationMethod = [None ,"z_score"]
-# normalizationMethod = [None]
-minValue, maxValue = 0, 1
-
-for i in range(len(normalizationMethod)):
-    print(f'Normalization method is {normalizationMethod[i]}\n')
+for i in range(len(normalization_method)):
+    print(f'Normalization method is {normalization_method[i]}\n')
     print(f'Linear regression with gradient decent alpha = 1\n')
 
-    XTrain, yTrain = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
+    XTrain, yTrain = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
     
-    # theta, MSETrain = linear_regression(XTrain, yTrain, alpha= 1)
-    theta, MSETrain = linear_regression(XTrain, yTrain, alpha= 0.5, ploter = 1)
+    # theta, MSE_train = linear_regression(XTrain, yTrain, alpha= 1)
+    theta, MSE_train = linear_regression(XTrain, yTrain, alpha = 0.6, ploter = 1)
    
-    XTest, tTest = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
+    X_test, y_test = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
 
-    # MSETest = linear_regression_evaluation(XTest, tTest, theta)
-    MSETest = linear_regression_evaluation(XTest, tTest, theta, plotter = 1)
+    # MSE_test = linear_regression_evaluation(X_test, y_test, theta)
+    MSE_test = linear_regression_evaluation(X_test, y_test, theta, plotter = 1)
 
     print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')
-    print(f'MSE on train data is\n{MSETrain}\n')
-    print(f'MSE on test data is\n{MSETest}\n')
+    print(f'MSE on train data is\n{MSE_train}\n')
+    print(f'MSE on test data is\n{MSE_test}\n')
 
     print(f'\n\n{"_"*50}\n\n')
 
-for i in range(len(normalizationMethod)):
-    print(f'Normalization method is {normalizationMethod[i]}\n')
+for i in range(len(normalization_method)):
+    print(f'Normalization method is {normalization_method[i]}\n')
     print(f'Linear regression with closed-form\n')
 
-    XTrain, yTrain = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
+    XTrain, yTrain = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
     
-    theta, MSETrain = linear_regression(XTrain, yTrain)
+    theta, MSE_train = linear_regression(XTrain, yTrain)
    
-    XTest, tTest = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalizationMethod[i], minValue=minValue, maxValue=maxValue)
+    X_test, y_test = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
 
-    # MSETest = linear_regression_evaluation(XTest, tTest, theta)
-    MSETest = linear_regression_evaluation(XTest, tTest, theta, plotter = 1)
+    # MSE_test = linear_regression_evaluation(X_test, y_test, theta)
+    MSE_test = linear_regression_evaluation(X_test, y_test, theta, plotter = 1)
 
     print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')
-    print(f'MSE on train data is\n{MSETrain}\n')
-    print(f'MSE on test data is\n{MSETest}\n')
+    print(f'MSE on train data is\n{MSE_train}\n')
+    print(f'MSE on test data is\n{MSE_test}\n')
 
     print(f'\n\n{"_"*50}\n\n')

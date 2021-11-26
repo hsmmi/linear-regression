@@ -1,4 +1,4 @@
-from linearRegression import linear_regression, linear_regression_evaluation
+from linear_regression import linear_regression, linear_regression_evaluation
 from preprocessing import read_dataset_to_X_and_y
 
 normalization_method = [None ,"z_score"]
@@ -9,10 +9,10 @@ for i in range(len(normalization_method)):
     print(f'Normalization method is {normalization_method[i]}\n')
     print(f'Linear regression with gradient decent alpha = 1\n')
 
-    XTrain, yTrain = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
+    X_train, y_train = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
     
-    # theta, MSE_train = linear_regression(XTrain, yTrain, alpha= 1)
-    theta, MSE_train = linear_regression(XTrain, yTrain, alpha = 0.6, ploter = 1)
+    # theta, MSE_train = linear_regression(X_train, y_train, alpha= 1)
+    theta, MSE_train = linear_regression(X_train, y_train, alpha = 0.2, ploter = 1)
    
     X_test, y_test = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
 
@@ -29,9 +29,9 @@ for i in range(len(normalization_method)):
     print(f'Normalization method is {normalization_method[i]}\n')
     print(f'Linear regression with closed-form\n')
 
-    XTrain, yTrain = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
+    X_train, y_train = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
     
-    theta, MSE_train = linear_regression(XTrain, yTrain)
+    theta, MSE_train = linear_regression(X_train, y_train)
    
     X_test, y_test = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
 

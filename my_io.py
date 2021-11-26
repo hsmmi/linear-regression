@@ -50,14 +50,15 @@ def read_dataset_with_pandas(file, atr= None):
 
 def dataframe_to_docx_table(header,data,file,doc=None,save=1):
     """
-    Read header and data and return doc include header and data
+    Read header and data
     If you gave if doc it add header and data to it and return it
     If you gave it save=0 it will not be save doc
+    Return doc include header and data
     """
     import docx
     if(doc == None):
         doc = docx.Document()
-    doc.add_heading(header, 0)
+    doc.add_heading(header, 1)
 
     table = doc.add_table(rows=len(data.index)+1, cols=len(data.columns)+1)
 

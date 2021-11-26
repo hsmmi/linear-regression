@@ -9,7 +9,7 @@ def closed_form(X_input,y_input):
     """
     return np.linalg.inv(X_input.T@X_input)@X_input.T@y_input
 
-def gradient_descent(X_input ,y_input, alpha, printer, ploter):
+def gradient_descent(X_input ,y_input, alpha, printer, plotter):
     """
     It gets matrix samples(X_input) and vector labels(y_input)
     Compute learning parameters with updating all theta(i)
@@ -18,21 +18,24 @@ def gradient_descent(X_input ,y_input, alpha, printer, ploter):
     Return learned parameters
     """
 
-    scale = ((X_input[:][1]).mean())**2 + 1
-
     def MSE(X_input ,y_input, theta):
         return ((X_input @ theta - y_input).T@(X_input @ theta - y_input))[0][0] / len(X_input)
 
+    scale = ((X_input[:][1]).mean())**2 + 1
+    normal_alpha = alpha/len(X_input)/scale
+
+    def gradient(X_input, theta, y_input):
+        return X_input.T @ ((X_input @ theta) - y_input)
+
     def update_theta(X_input ,y_input, theta, alpha):
-        return theta - (alpha/len(X_input)/scale) * (X_input.T @ ((X_input @ theta) - y_input))
+        return theta - alpha * gradient(X_input, theta, y_input)
     
     def step_decay(epoch,epochs_drop):
         """
         It 3/4 the learning rate every epochs_drop epochs
         """
         drop = 3/4
-        new_alpha = alpha * drop**((1+epoch)//epochs_drop)
-        return new_alpha
+        return drop**((1+epoch)//epochs_drop)
 
     theta = np.zeros((len(X_input[0]),1))
 
@@ -42,7 +45,7 @@ def gradient_descent(X_input ,y_input, alpha, printer, ploter):
     eps = 1e-5
 
     for i in range(1,max_epoch):
-        theta = update_theta(X_input ,y_input, theta, step_decay(i,10))
+        theta = update_theta(X_input ,y_input, theta, normal_alpha * step_decay(i,10))
         epoch += 1
         MSE_log.append(MSE(X_input ,y_input, theta))
         if(i > 1 and abs(MSE_log[-2]-MSE_log[-1]) < eps):
@@ -52,7 +55,7 @@ def gradient_descent(X_input ,y_input, alpha, printer, ploter):
         print(f'MSE in each epochs are \n{MSE_log}')
         print(f'After {epoch} epochs')
   
-    if(ploter):
+    if(plotter):
         plt.plot(range(0,len(MSE_log)), MSE_log, ".--", label="cost function")
         plt.legend(loc="upper right")
         plt.xlabel('Iteratioin')
@@ -62,7 +65,7 @@ def gradient_descent(X_input ,y_input, alpha, printer, ploter):
     
     return theta
 
-def linear_regression(X_train, y_train, alpha = None, printer = 0, ploter = 0):
+def linear_regression(X_train, y_train, alpha = None, printer = 0, plotter = 0):
     """
     It gets matrix samples train(X_train) and their labels(y_train) and method.
     alpha:
@@ -79,7 +82,7 @@ def linear_regression(X_train, y_train, alpha = None, printer = 0, ploter = 0):
     if(alpha == None):
         theta = closed_form(X_train,y_train)
     else:
-        theta = gradient_descent(X_train,y_train,alpha,printer,ploter)
+        theta = gradient_descent(X_train,y_train,alpha,printer,plotter)
 
     if(printer):
         print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')

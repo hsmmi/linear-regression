@@ -7,12 +7,12 @@ min_value, max_value = 0, 1
 
 for i in range(len(normalization_method)):
     print(f'Normalization method is {normalization_method[i]}\n')
-    print(f'Linear regression with gradient decent alpha = 1\n')
+    print(f'Linear regression with gradient decent alpha = 0.3\n')
 
     X_train, y_train = read_dataset_to_X_and_y('dataset/Data-Train.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
     
     # theta, MSE_train = linear_regression(X_train, y_train, alpha= 1)
-    theta, MSE_train = linear_regression(X_train, y_train, alpha = 0.2, ploter = 1)
+    theta, MSE_train = linear_regression(X_train, y_train, alpha = 0.3, plotter = 1)
    
     X_test, y_test = read_dataset_to_X_and_y('dataset/Data-Test.csv',normalization=normalization_method[i], min_value=min_value, max_value=max_value)
 

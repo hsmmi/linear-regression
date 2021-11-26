@@ -2,7 +2,6 @@ from linear_regression import linear_regression, linear_regression_evaluation
 from preprocessing import read_dataset_to_X_and_y
 
 normalization_method = [None ,"z_score"]
-# normalization_method = [None]
 min_value, max_value = 0, 1
 
 for i in range(len(normalization_method)):
@@ -19,7 +18,7 @@ for i in range(len(normalization_method)):
     # MSE_test = linear_regression_evaluation(X_test, y_test, theta)
     MSE_test = linear_regression_evaluation(X_test, y_test, theta, plotter = 1)
 
-    print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')
+    print(f'vector learned parameters (θ0 , θ1 , ..., θn) is\n{theta}\n')
     print(f'MSE on train data is\n{MSE_train}\n')
     print(f'MSE on test data is\n{MSE_test}\n')
 
@@ -38,7 +37,7 @@ for i in range(len(normalization_method)):
     # MSE_test = linear_regression_evaluation(X_test, y_test, theta)
     MSE_test = linear_regression_evaluation(X_test, y_test, theta, plotter = 1)
 
-    print(f'vector learned parameters (θ0 , θ1 , ..., θn ) is\n{theta}\n')
+    print(f'vector learned parameters (θ0 , θ1 , ..., θn) is\n{theta}\n')
     print(f'MSE on train data is\n{MSE_train}\n')
     print(f'MSE on test data is\n{MSE_test}\n')
 
